@@ -6,7 +6,9 @@ const router = Router()
 
 
 router.get('/products',productController.getProducts);
+router.get('/products/:id', productController.getProductById);
 router.post('/products', productController.saveProduct);
+router.patch('/products/:id', productController.updateProduct);
 
 
 
