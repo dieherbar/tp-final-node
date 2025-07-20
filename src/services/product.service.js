@@ -1,8 +1,12 @@
 // services
-import { getAllProducts } from '../models/product.model.js'
+import { getAllProducts, saveProduct } from '../models/product.model.js'
 
 const getAll = async () => {
   return await getAllProducts();
 };
 
-export default { getAll };
+const addProduct = async (product) => {
+  return await saveProduct(product);
+}
+
+export default { getAll, addProduct };
