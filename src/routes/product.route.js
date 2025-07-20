@@ -6,6 +6,7 @@ const router = Router()
 
 
 router.get('/products',productController.getProducts);
+router.post('/products', productController.saveProduct);
 
 
 

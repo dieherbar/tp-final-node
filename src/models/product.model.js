@@ -23,3 +23,13 @@ export const getAllProducts = async () => {
         throw new Error("Error", error.message);
     }
 }
+
+export const saveProduct = async (product) => {
+    try {
+        const docRef = await addDoc(productCollection, product);
+        return { id: docRef.id, ...product };
+    } catch (error) {
+        throw new Error("Error", error.message);
+        
+    }
+}

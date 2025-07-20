@@ -9,4 +9,14 @@ const getProducts = async (req, res) => {
     }
 };
 
-export default { getProducts };
+const saveProduct = async (req, res) => {
+    try {
+        const product = req.body;
+        const savedProduct = await productService.addProduct(product);
+        res.status(201).json({ message: "Producto guardado", payload: savedProduct });
+    } catch (error) {
+        res.status(500).json({ message: "Error interno del servidor", error: error.message });
+    }
+}
+
+export default { getProducts, saveProduct };
