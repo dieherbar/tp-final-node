@@ -3,7 +3,7 @@ import { join, __dirname } from "./utils/index.js";
 import productRoutes from "./routes/product.route.js";
 import { db } from "./config/db-connection.js";
 import cors from "cors";
-import { corsOptions } from "./middlewares/cors.middleware.js";
+import corsMiddleware from "./middlewares/cors.middleware.js";
 import bodyParser from "body-parser";
 
 //settings
@@ -11,19 +11,25 @@ const app = express();
 app.set("PORT", 3000);
 
 // middlewares
-app.use(bodyParser.json());
 app.use(express.json());
-app.use(cors(corsOptions));
 app.use(express.static(join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(corsMiddleware);
 
 //routes
 app.get("/", (req, res) => {
   res.json({ title: "Home Page" });
 });
+app.get('/api/msg', (req, res) => {
+    res.status(200).json({ message: "Soy un json desde /api index" });
+});
 // app.use("/api/users", userRoutes);
 app.use("/api", productRoutes);
 
+// Middleware para manejar errores 404 
+app.use((req, res) => {
+  res.status(404).send('Recurso no encontrado o ruta inválida'); 
+});
 
 //listeners
 app.listen(app.get("PORT"), () => {
