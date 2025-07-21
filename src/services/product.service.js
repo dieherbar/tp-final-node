@@ -1,5 +1,5 @@
 // services
-import { getAllProducts, getProductById, saveProduct, updateProduct } from '../models/product.model.js'
+import { getAllProducts, getProductById, saveProduct, updateProduct, eliminate } from '../models/product.model.js'
 
 const getAll = async () => {
   return await getAllProducts();
@@ -17,4 +17,8 @@ const updateProd = async (id, product) => {
   return await updateProduct(id, product);
 }
 
-export default { getAll,getById, addProduct, updateProd };
+const deleteProd = async (id) => {
+  return await eliminate(id);
+}
+
+export default { getAll,getById, addProduct, updateProd, deleteProd };

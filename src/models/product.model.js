@@ -59,3 +59,13 @@ export const updateProduct = async (id, product) => {
         throw new Error("Error:", error.message);
     }
 }
+
+export const eliminate = async (id) => {
+    try {
+        const productRef = doc(db, 'products', id);
+        await deleteDoc(productRef);
+        return { message: "Producto eliminado" };
+    } catch (error) {
+        throw new Error("Error: " + error.message);
+    }
+}
