@@ -29,11 +29,12 @@ export const getProductById = async (id) => {
     try {
         const productRef = doc(db, 'products', id);
         const productDoc = await getDoc(productRef);
-        if (productDoc.exists()) {
-            return { id: productDoc.id, ...productDoc.data() };
-        } else {
-            throw new Error("Producto no encontrado");
+        if (!productDoc.exists()) {
+            return null; // Cambiado para devolver null si no se encuentra el producto
+            //throw new Error("Producto no encontrado");
         }
+        return { id: productDoc.id, ...productDoc.data() };
+
     } catch (error) {
         throw new Error("Error: " + error.message);
     }
