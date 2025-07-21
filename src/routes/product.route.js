@@ -6,7 +6,10 @@ const router = Router()
 
 
 router.get('/products',productController.getProducts);
-router.post('/products', productController.saveProduct);
+router.get('/products/:id', productController.getProductById);
+router.post('/products/create', productController.saveProduct);
+router.patch('/products/:id', productController.updateProduct);
+router.delete('/products/:id', productController.deleteProduct);
 
 
 

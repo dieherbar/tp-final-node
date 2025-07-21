@@ -20,7 +20,22 @@ export const getAllProducts = async () => {
 
         return products;
     } catch (error) {
-        throw new Error("Error", error.message);
+        throw new Error("Error: " + error.message);
+    }
+}
+
+export const getProductById = async (id) => {
+    //mejorar producto no encontrado, devolver error 500
+    try {
+        const productRef = doc(db, 'products', id);
+        const productDoc = await getDoc(productRef);
+        if (productDoc.exists()) {
+            return { id: productDoc.id, ...productDoc.data() };
+        } else {
+            throw new Error("Producto no encontrado");
+        }
+    } catch (error) {
+        throw new Error("Error: " + error.message);
     }
 }
 
@@ -29,7 +44,28 @@ export const saveProduct = async (product) => {
         const docRef = await addDoc(productCollection, product);
         return { id: docRef.id, ...product };
     } catch (error) {
-        throw new Error("Error", error.message);
-        
+        throw new Error("Error: " + error.message);
+
+    }
+}
+
+export const updateProduct = async (id, product) => {
+    try {
+        const productRef = doc(db, 'products', id);
+        await updateDoc(productRef, product);
+        const updatedDoc = await getDoc(productRef);
+        return { id, ...updatedDoc.data() };
+    } catch (error) {
+        throw new Error("Error:", error.message);
+    }
+}
+
+export const eliminate = async (id) => {
+    try {
+        const productRef = doc(db, 'products', id);
+        await deleteDoc(productRef);
+        return { message: "Producto eliminado" };
+    } catch (error) {
+        throw new Error("Error: " + error.message);
     }
 }
