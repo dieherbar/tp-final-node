@@ -1,6 +1,7 @@
 import express from "express";
 import { join, __dirname } from "./utils/index.js";
 import productRoutes from "./routes/product.route.js";
+import authRoutes from "./routes/auth.route.js";
 import { db } from "./config/db-connection.js";
 import cors from "cors";
 import corsMiddleware from "./middlewares/cors.middleware.js";
@@ -23,7 +24,7 @@ app.get("/", (req, res) => {
 app.get('/api/msg', (req, res) => {
     res.status(200).json({ message: "Soy un json desde /api index" });
 });
-// app.use("/api/users", userRoutes);
+app.use("/auth", authRoutes);
 app.use("/api", productRoutes);
 
 // Middleware para manejar errores 404 
