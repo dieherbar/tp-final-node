@@ -1,18 +1,36 @@
 import { config } from 'dotenv';
 config();
+//process.loadEnvFile();
+//console.log("una variable de entorno:", process.env.APIKEY);
+
+const requiredEnvVars = [
+    'APIKEY',
+    'AUTHDOMAIN',
+    'PROJECTID',
+    'STORAGEBUCKET',
+    'MESSAGINGSENDERID',
+    'APPID'
+];
+
+// Validar que todas las variables requeridas estén presentes
+requiredEnvVars.forEach(env => {
+    if (!process.env[env]) {
+        throw new Error(`Falta la variable de entorno requerida: ${env}`);
+    }
+});
 
 export const envs = {
     database: {
-        apikey: process.env.API_KEY,
-        authDomain: process.env.AUTH_DOMAIN,
-        projectId: process.env.PROJECT_ID,
-        storageBucket: process.env.STORAGE_BUCKET,
-        messagingSenderId: process.env.MESSAGING_SENDER_ID,
-        appId: process.env.APP_ID,
+        apikey: process.env.APIKEY,
+        authDomain: process.env.AUTHDOMAIN,
+        projectId: process.env.PROJECTID,
+        storageBucket: process.env.STORAGEBUCKET,
+        messagingSenderId: process.env.MESSAGINGSENDERID,
+        appId: process.env.APPID,
     },
     port: process.env.PORT || 3000,
     secrets: {
-        jwt_secret: process.env.JWT_SECRET || "test_secret_key",
-        session: process.env.SESSION_KEY || "test_session_key",
+        jwt_secret: process.env.JWT_SECRET_KEY, 
+        session: process.env.SESSION_KEY 
     }
 };
