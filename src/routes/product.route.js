@@ -6,6 +6,7 @@ import { authentication } from "../middlewares/auth.middleware.js";
 const router = Router()
 
 
+//router.get('/products', productController.getProductsByCategory);
 router.get('/products',productController.getProducts);
 router.get('/products/:id', productController.getProductById);
 router.post('/products/create', authentication, productController.saveProduct);

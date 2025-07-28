@@ -1,5 +1,5 @@
 // services
-import { getAllProducts, getProductById, saveProduct, updateProduct, eliminate } from '../models/product.model.js'
+import { getAllProducts, getProductById, getProductsByCategory, saveProduct, updateProduct, eliminate } from '../models/product.model.js'
 
 const getAll = async () => {
   return await getAllProducts();
@@ -8,6 +8,16 @@ const getAll = async () => {
 const getById = async (id) => {
   return await getProductById(id);
 }
+
+ const getByCategory = async (category) => {
+  return await getProductsByCategory(category);
+} 
+/* const getByCategory = async (category) => {
+    if (!category || typeof category !== 'string') {
+        throw new Error('Categoría no válida');
+    }
+    return await getProductsByCategory(category.toLowerCase().trim());
+} */
 
 const addProduct = async (product) => {
   return await saveProduct(product);
@@ -21,4 +31,4 @@ const deleteProd = async (id) => {
   return await eliminate(id);
 }
 
-export default { getAll,getById, addProduct, updateProd, deleteProd };
+export default { getAll, getById, getByCategory, addProduct, updateProd, deleteProd };
