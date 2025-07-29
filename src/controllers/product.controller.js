@@ -2,7 +2,12 @@
 import productService from '../services/product.service.js'
 const getProducts = async (req, res) => {
     try {
-        const products = await productService.getAll();
+        const { category } = req.query;
+        // Si hay categoría, filtra; si no, trae todos
+        const products = category 
+            ? await productService.getByCategory(category)
+            : await productService.getAll();
+        //const products = await productService.getAll();
         res.status(200).json({ message: "Lista de productos", payload: products });
     } catch (error) {
         res.status(500).json({ message: "Error interno del servidor", error: error.message });
@@ -24,6 +29,20 @@ const getProductById = async (req, res) => {
         res.status(500).json({ message: "Error interno del servidor", error: error.message });
     }
 }
+//filtrar productos por categoria
+ const getProductsByCategory = async (req, res) => {
+    try {
+        const { category } = req.query;
+        console.log('Query params:', req.query);
+        if (!category) {
+            return res.status(400).json({ message: "Falta el parámetro de categoría" });
+        }
+        const products = await productService.getByCategory(category);
+        res.status(200).json({ message: "Productos filtrados por categoría", payload: products });
+    } catch (error) {
+        res.status(500).json({ message: "Error interno del servidor", error: error.message });
+    }
+} 
 
 const saveProduct = async (req, res) => {
     try {
@@ -56,4 +75,4 @@ const deleteProduct = async (req, res) => {
     }
 }
 
-export default { getProducts, getProductById, saveProduct, updateProduct, deleteProduct };
+export default { getProducts, getProductById, getProductsByCategory, saveProduct, updateProduct, deleteProduct };
