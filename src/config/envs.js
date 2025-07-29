@@ -2,7 +2,7 @@
 config();*/
 import { loadEnvFile } from 'node:process';
 process.loadEnvFile('.env'); // Cargar las variables de entorno desde el archivo .env
-//console.log("una variable de entorno:", process.env.APIKEY);
+
 
 const requiredEnvVars = [
     'APIKEY',

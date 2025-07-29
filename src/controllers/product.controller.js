@@ -30,46 +30,10 @@ const getProductById = async (req, res) => {
     }
 }
 //filtrar productos por categoria
-/* const getProductsByCategory = async (req, res) => {
-    try {
-        const { category } = req.query;
-        
-        if (!category) {
-            return res.status(400).json({ 
-                success: false,
-                message: "Parámetro 'category' es requerido",
-                example: "/products?category=electronics"
-            });
-        }
-
-        const products = await productService.getByCategory(category);
-        
-        if (products.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "No se encontraron productos en esta categoría",
-                category
-            });
-        }
-
-        res.status(200).json({ 
-            success: true,
-            count: products.length,
-            data: products 
-        });
-        
-    } catch (error) {
-        res.status(500).json({ 
-            success: false,
-            message: "Error al filtrar productos",
-            error: process.env.NODE_ENV === 'development' ? error.message : undefined
-        });
-    }
-} */
  const getProductsByCategory = async (req, res) => {
     try {
         const { category } = req.query;
-        console.log('Query params:', req.query); // Deberías ver { category: 'electronics' }
+        console.log('Query params:', req.query);
         if (!category) {
             return res.status(400).json({ message: "Falta el parámetro de categoría" });
         }

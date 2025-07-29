@@ -7,9 +7,7 @@ import {
     getDocs,
     addDoc,
     updateDoc,
-    deleteDoc,
-    query,
-    where
+    deleteDoc
 } from 'firebase/firestore';
 
 const productCollection = collection(db, 'products');
@@ -56,29 +54,6 @@ export const getProductById = async (id) => {
         throw new Error("Error: " + error.message);
     }
 } 
-
-
-
-/* export const getProductsByCategory = async (category) => {
-    try {
-        // Crea una consulta con filtro
-        const q = query(
-            productCollection,
-            where('category', '==', category)
-        );
-        
-        const querySnapshot = await getDocs(q);
-        
-        return querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        
-    } catch (error) {
-        console.error('Error en getProductsByCategory:', error);
-        throw new Error("Error al filtrar productos: " + error.message);
-    }
-} */
 
 export const saveProduct = async (product) => {
     try {

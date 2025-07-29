@@ -12,12 +12,6 @@ const getById = async (id) => {
  const getByCategory = async (category) => {
   return await getProductsByCategory(category);
 } 
-/* const getByCategory = async (category) => {
-    if (!category || typeof category !== 'string') {
-        throw new Error('Categoría no válida');
-    }
-    return await getProductsByCategory(category.toLowerCase().trim());
-} */
 
 const addProduct = async (product) => {
   return await saveProduct(product);
