@@ -7,7 +7,7 @@ import {
     getDocs,
     addDoc,
     updateDoc,
-    deleteDoc,
+    deleteDoc
 } from 'firebase/firestore';
 
 const productCollection = collection(db, 'products');
@@ -39,6 +39,21 @@ export const getProductById = async (id) => {
         throw new Error("Error: " + error.message);
     }
 }
+ export const getProductsByCategory = async (category) => {
+    try {
+        const productsList = await getDocs(productCollection);
+        const products = [];
+        productsList.forEach((doc) => {
+            const productData = doc.data();
+            if (productData.category === category) {
+                products.push({ id: doc.id, ...productData });
+            }
+        });
+        return products;
+    } catch (error) {
+        throw new Error("Error: " + error.message);
+    }
+} 
 
 export const saveProduct = async (product) => {
     try {
