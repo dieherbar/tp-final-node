@@ -35,6 +35,8 @@ app.use((req, res) => {
 });
 
 //listeners
+const PORT = process.env.PORT;
 app.listen(app.get("PORT"), () => {
+//app.listen(PORT, () => { sugerido por chat gpt
   console.log(`Server on port http://localhost:${app.get("PORT")}`);
 });
