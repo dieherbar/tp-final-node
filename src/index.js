@@ -6,6 +6,7 @@ import { db } from "./config/db-connection.js";
 import cors from "cors";
 import corsMiddleware from "./middlewares/cors.middleware.js";
 import bodyParser from "body-parser";
+import serviceRoutes from "./routes/service.route.js";
 
 //settings
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(corsMiddleware);
 
 //routes
+app.use("/",serviceRoutes);
 app.get("/", (req, res) => {
   res.json({ title: "Home Page" });
 });
