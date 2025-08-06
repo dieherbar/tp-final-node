@@ -8,6 +8,8 @@ import corsMiddleware from "./middlewares/cors.middleware.js";
 import bodyParser from "body-parser";
 import serviceRoutes from "./routes/service.route.js";
 import { xmlParser } from './utils/xmlBodyParser.js';
+import soapRoutes from './routes/soap.route.js';
+
 
 //settings
 const app = express();
@@ -22,6 +24,7 @@ app.use(xmlParser);
 
 //routes
 app.use("/",serviceRoutes);
+app.use('/ws', soapRoutes); // Por ejemplo: POST /ws/soap
 app.get("/", (req, res) => {
   res.json({ title: "Home Page" });
 });
