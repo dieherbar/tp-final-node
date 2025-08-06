@@ -3,7 +3,10 @@ import { create } from 'xmlbuilder2';
 const idsValidos = ['A87654321', 'B12345678', 'C99999999'];
 
 export const obtenerRespuesta = (req, res) => {
-    const { centro, id, tipo } = req.query;
+    //const { centro, id, tipo } = req.query;
+    // Soportar tanto GET como POST
+    const { centro, id, tipo } = req.method === 'GET' ? req.query : req.body;
+
 
     if (!centro || !id || !tipo) {
         return res.status(400).send('Faltan parámetros requeridos: centro, id, tipo');
