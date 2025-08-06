@@ -41,7 +41,7 @@ export const obtenerRespuesta = (req, res) => {
 
     if (!idValido) {
         const xmlError = create({ version: '1.0' })
-            .ele('respuesta')
+            /*.ele('respuesta')
             .ele('codigoEstado').txt('404').up()
             .ele('mensaje').txt('ID no encontrado').up()
             .ele('detalle')
@@ -49,45 +49,54 @@ export const obtenerRespuesta = (req, res) => {
             .ele('COD_ACR').txt().up()
             .ele('COD_DEUD').up()
             .up()
+            .end({ prettyPrint: true });*/
+            .ele('detail')
+            .ele('n0:Z_FI_WS_CONS_DEUD_ACRResponse', {
+                'xmlns:n0': 'urn:sap-com:document:sap:rfc:functions'
+                })
+            .ele('Name').txt('NO_ACR').up()
+            .ele('Text')
+            .up()
             .end({ prettyPrint: true });
 
-        res.set('Content-Type', 'application/xml');
-        return res.status(404).send(xmlError);
+
+res.set('Content-Type', 'application/xml');
+return res.status(404).send(xmlError);
     }
 
-    const codigoAcreedor = "0000733527";
+const codigoAcreedor = "0000733527";
 
-    const xml = create({ version: '1.0' })
-        /*.ele('respuesta')
-        .ele('codigoEstado').txt('200').up()
-        .ele('mensaje').txt('Consulta exitosa').up()
-        .ele('resultado')
+const xml = create({ version: '1.0' })
+    /*.ele('respuesta')
+    .ele('codigoEstado').txt('200').up()
+    .ele('mensaje').txt('Consulta exitosa').up()
+    .ele('resultado')
+    .ele('centro').txt(centro).up()
+     .ele('id').txt(id).up()
+     .ele('tipo').txt(tipo).up()*/
+    //.ele('detail')
+    .ele('n0:Z_FI_WS_CONS_DEUD_ACRResponse', {
+        'xmlns:n0': 'urn:sap-com:document:sap:rfc:functions'
+    })
+    .ele('COD_ACR').txt(codigoAcreedor).up()
+    .ele('COD_DEUD').up()
+    .up()
+    .end({ prettyPrint: true });
+
+/*
+const xml = create({ version: '1.0' })
+.ele('respuesta')
+    .ele('codigoEstado').txt('200').up()
+    .ele('mensaje').txt('Consulta exitosa').up()
+    .ele('resultado')
         .ele('centro').txt(centro).up()
-         .ele('id').txt(id).up()
-         .ele('tipo').txt(tipo).up()*/
-        //.ele('detail')
-        .ele('n0:Z_FI_WS_CONS_DEUD_ACRResponse', {
-            'xmlns:n0': 'urn:sap-com:document:sap:rfc:functions'
-        })
-        .ele('COD_ACR').txt(codigoAcreedor).up()
-        .ele('COD_DEUD').up()
-        .up()
-        .end({ prettyPrint: true });
-
-    /*
-    const xml = create({ version: '1.0' })
-    .ele('respuesta')
-        .ele('codigoEstado').txt('200').up()
-        .ele('mensaje').txt('Consulta exitosa').up()
-        .ele('resultado')
-            .ele('centro').txt(centro).up()
-            .ele('id').txt(id).up()
-            .ele('tipo').txt(tipo).up()
-            .ele('COD_ACR').txt(codigoRespuesta).up()
-        .up()
-    .end({ prettyPrint: true });*/
+        .ele('id').txt(id).up()
+        .ele('tipo').txt(tipo).up()
+        .ele('COD_ACR').txt(codigoRespuesta).up()
+    .up()
+.end({ prettyPrint: true });*/
 
 
-    res.set('Content-Type', 'application/xml');
-    res.status(200).send(xml);
+res.set('Content-Type', 'application/xml');
+res.status(200).send(xml);
 };
