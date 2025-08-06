@@ -1,6 +1,6 @@
 import { create } from 'xmlbuilder2';
 
-const idsValidos = ['A87654321', 'B12345678', 'C99999999'];
+const idsValidos = ['A87654321', 'B12345678', 'C99999999', 'J99542516'];
 
 export const obtenerRespuesta = (req, res) => {
     //const { centro, id, tipo } = req.query;
