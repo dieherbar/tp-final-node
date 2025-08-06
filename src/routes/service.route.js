@@ -4,5 +4,7 @@ import { obtenerRespuesta } from '../controllers/service.controller.js';
 const router = express.Router();
 
 router.get('/servicio', obtenerRespuesta);
+router.post('/servicio', obtenerRespuesta);
+
 
 export default router;

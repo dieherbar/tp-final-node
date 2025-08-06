@@ -7,6 +7,7 @@ import cors from "cors";
 import corsMiddleware from "./middlewares/cors.middleware.js";
 import bodyParser from "body-parser";
 import serviceRoutes from "./routes/service.route.js";
+import { xmlParser } from './utils/xmlBodyParser.js';
 
 //settings
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(express.static(join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(corsMiddleware);
+app.use(xmlParser);
 
 //routes
 app.use("/",serviceRoutes);
