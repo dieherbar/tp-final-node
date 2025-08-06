@@ -58,13 +58,17 @@ export const obtenerRespuesta = (req, res) => {
     const codigoAcreedor = "0000733527";
 
     const xml = create({ version: '1.0' })
-        .ele('respuesta')
+        /*.ele('respuesta')
         .ele('codigoEstado').txt('200').up()
         .ele('mensaje').txt('Consulta exitosa').up()
         .ele('resultado')
-        /* .ele('centro').txt(centro).up()
+        .ele('centro').txt(centro).up()
          .ele('id').txt(id).up()
          .ele('tipo').txt(tipo).up()*/
+        //.ele('detail')
+        .ele('n0:Z_FI_WS_CONS_DEUD_ACRResponse', {
+            'xmlns:n0': 'urn:sap-com:document:sap:rfc:functions'
+        })
         .ele('COD_ACR').txt(codigoAcreedor).up()
         .ele('COD_DEUD').up()
         .up()
