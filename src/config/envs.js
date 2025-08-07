@@ -1,7 +1,7 @@
-/*import { config } from 'dotenv';
-config();*/
-import { loadEnvFile } from 'node:process';
-process.loadEnvFile('.env'); // Cargar las variables de entorno desde el archivo .env
+import { config } from 'dotenv';
+config();
+//import { loadEnvFile } from 'node:process'; //esto no funciona en vercel, no es soportado
+//process.loadEnvFile('.env'); // Cargar las variables de entorno desde el archivo .env
 
 
 const requiredEnvVars = [

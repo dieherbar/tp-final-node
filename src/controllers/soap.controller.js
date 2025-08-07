@@ -10,30 +10,38 @@ export const procesarSoap = (req, res) => {
     req.on('data', chunk => rawData += chunk);
 
     req.on('end', () => {
-        parseString(rawData, { explicitArray: false }, (err, result) => {
+        // Ajustamos el parser
+        parseString(rawData, {
+            explicitArray: false,
+            ignoreAttrs: false,
+            tagNameProcessors: [require('xml2js').processors.stripPrefix]
+        }, (err, result) => {
             if (err) {
-                console.error('Error al parsear SOAP XML:', err);
+                console.error('❌ Error al parsear SOAP XML:', err);
                 return res.status(400).send('XML inválido');
             }
 
-            // Accedemos al contenido dentro del Body
-            const body = result['soapenv:Envelope']?.['soapenv:Body'];
-            const data = body?.['urn:Z_FI_WS_CONS_DEUD_ACR'];
-            const id = data?.['STCD1']; // Este es el ID que nos interesa
+            // 🪵 Log para ver la estructura completa
+            console.log('✅ XML parseado:', JSON.stringify(result, null, 2));
 
+            // Accedemos al contenido sin importar el prefijo
+            const body = result.Envelope?.Body;
+            const data = body?.Z_FI_WS_CONS_DEUD_ACR;
 
             if (!data) {
+                console.error('❌ Estructura SOAP inválida: no se encontró Z_FI_WS_CONS_DEUD_ACR');
                 return res.status(400).send('Estructura SOAP inválida');
             }
 
-            const centro = data['CENTRO_WG'];
-            const tipo = data['TIPO'];
+            const id = data.STCD1 || '';
+            const centro = data.CENTRO_WG;
+            const tipo = data.TIPO;
 
-
-            // Simulación de respuesta
+            console.log('🔎 ID recibido:', id);
 
             const idValido = idsValidos.includes(id);
-            if (idsValidos.includes(id)) {
+
+            if (idValido) {
                 // Respuesta para ID válido
                 soapResponse = create({ version: '1.0' })
                     .ele('soapenv:Envelope', {
@@ -45,9 +53,8 @@ export const procesarSoap = (req, res) => {
                     })
                     .ele('COD_ACR').txt('0000527733').up()
                     .ele('COD_DEUD').txt('').up()
-                    .up()
-                    .up()
-                    .end({ prettyPrint: true });
+                    .up().up().end({ prettyPrint: true });
+
             } else {
                 // Respuesta para ID inexistente
                 soapResponse = create({ version: '1.0' })
@@ -55,22 +62,23 @@ export const procesarSoap = (req, res) => {
                         'xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/'
                     })
                     .ele('soapenv:Body')
-                    /*.ele('n0:Z_FI_WS_CONS_DEUD_ACRResponse')
-                    .ele('COD_ACR').txt('').up()
-                    .ele('COD_DEUD').txt('').up()
-                    .up()
-                    .up()
-                    .end({ prettyPrint: true });*/
                     .ele('detail')
                     .ele('n0:Z_FI_WS_CONS_DEUD_ACRResponse', {
                         'xmlns:n0': 'urn:sap-com:document:sap:rfc:functions'
                     })
                     .ele('Name').txt('NO_ACR').up()
-                    .ele('Text')
-                    .up()
-                    .end({ prettyPrint: true });
+                    .ele('Text').up()
+                    .up().up().end({ prettyPrint: true });
             }
-            
+
+            res.set('Content-Type', 'text/xml');
+            res.send(soapResponse);
+            //    });
+            //  });
+            //};
+
+
+
             // Simular timeout si el ID es "timeout"
             if (id === 'timeout') {
                 console.log('⏳ Simulando timeout de 30 segundos...');
