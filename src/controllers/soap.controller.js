@@ -152,7 +152,7 @@ export const procesarSoapDebug = (req, res) => {
             <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
                 <soapenv:Body>
                     <n0:Z_FI_WS_CONS_DEUD_ACRResponse xmlns:n0="urn:sap-com:document:sap:rfc:functions">
-                        <COD_ACR>0000000000</COD_ACR>
+                        <COD_ACR>000000001</COD_ACR>
                         <COD_DEUD></COD_DEUD>
                     </n0:Z_FI_WS_CONS_DEUD_ACRResponse>
                 </soapenv:Body>
