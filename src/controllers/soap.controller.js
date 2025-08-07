@@ -1,4 +1,4 @@
-import { parseString } from 'xml2js';
+import { parseString, processors } from 'xml2js';
 import { create } from 'xmlbuilder2';
 
 export const procesarSoap = (req, res) => {
@@ -14,7 +14,7 @@ export const procesarSoap = (req, res) => {
         parseString(rawData, {
             explicitArray: false,
             ignoreAttrs: false,
-            tagNameProcessors: [require('xml2js').processors.stripPrefix]
+            tagNameProcessors: [processors.stripPrefix]
         }, (err, result) => {
             if (err) {
                 console.error('❌ Error al parsear SOAP XML:', err);
@@ -67,17 +67,10 @@ export const procesarSoap = (req, res) => {
                         'xmlns:n0': 'urn:sap-com:document:sap:rfc:functions'
                     })
                     .ele('Name').txt('NO_ACR').up()
-                    .ele('Text').up()
-                    .up().up().end({ prettyPrint: true });
+                    .ele('Text')
+                    .up()
+                    .end({ prettyPrint: true });
             }
-
-            res.set('Content-Type', 'text/xml');
-            res.send(soapResponse);
-            //    });
-            //  });
-            //};
-
-
 
             // Simular timeout si el ID es "timeout"
             if (id === 'timeout') {
@@ -90,7 +83,7 @@ export const procesarSoap = (req, res) => {
                                 '@xmlns:n0': 'urn:sap-com:document:sap:rfc:functions',
                                 'soapenv:Body': {
                                     'n0:Z_FI_WS_CONS_DEUD_ACRResponse': {
-                                        'COD_ACR': '',
+                                        'COD_ACR': '71m30u7',
                                         'COD_DEUD': ''
                                     }
                                 }
