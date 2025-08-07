@@ -101,3 +101,38 @@ export const procesarSoap = (req, res) => {
         });
     });
 };
+
+export const procesarSoapDebug = (req, res) => {
+    let rawBody = '';
+    req.setEncoding('utf8');
+
+    req.on('data', chunk => {
+        rawBody += chunk;
+    });
+
+    req.on('end', () => {
+        console.log('\n===== NUEVA SOLICITUD =====');
+        console.log('🧾 HEADERS:');
+        console.log(req.headers);
+        console.log('📦 BODY:');
+        console.log(rawBody);
+        console.log('===========================\n');
+
+        res.set('Content-Type', 'text/xml');
+        res.status(200).send(`
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                <soapenv:Body>
+                    <n0:Z_FI_WS_CONS_DEUD_ACRResponse xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+                        <COD_ACR>0000000000</COD_ACR>
+                        <COD_DEUD></COD_DEUD>
+                    </n0:Z_FI_WS_CONS_DEUD_ACRResponse>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        `);
+    });
+
+    req.on('error', err => {
+        console.error('❌ Error al recibir datos:', err);
+        res.status(500).send('Error al procesar solicitud SOAP');
+    });
+};
