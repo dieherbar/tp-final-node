@@ -22,7 +22,7 @@ export const procesarSoap = (req, res) => {
             }
 
             // 🪵 Log para ver la estructura completa
-            console.log('✅ XML parseado:', JSON.stringify(result, null, 2));
+            //console.log('✅ XML parseado:', JSON.stringify(result, null, 2));
 
             // Accedemos al contenido sin importar el prefijo
             const body = result.Envelope?.Body;
@@ -54,6 +54,17 @@ export const procesarSoap = (req, res) => {
                     .ele('COD_ACR').txt('0000527733').up()
                     .ele('COD_DEUD').txt('').up()
                     .up().up().end({ prettyPrint: true });
+                res.set('Content-Type', 'text/xml')
+                res.status(200).send(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+            <soap-env:Header/>
+            <soapenv:Body>
+            <n0:Z_FI_WS_CONS_DEUD_ACRResponse xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+            <COD_ACR>000000test</COD_ACR>
+            </COD_DEUD>
+            </n0:Z_FI_WS_CONS_DEUD_ACRResponse>
+            </soapenv:Body>
+        </soapenv:Envelope>
+        `);
 
             } else {
                 // Respuesta para ID inexistente
@@ -70,6 +81,23 @@ export const procesarSoap = (req, res) => {
                     .ele('Text')
                     .up()
                     .end({ prettyPrint: true });
+                res.set('Content-Type', 'text/xml')
+                res.status(500).send(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+            <soap-env:Header/>
+                <soapenv:Body>
+                <soap-env:Fault>
+                <faultcode>soap-env:Client</faultcode>
+                <faultstring xml:lang="es">NO_ACR</faultstring>
+                <detail>
+                <n0:Z_FI_WS_CONS_DEUD_ACR.Exception xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+                <Name>NO_ACR</Name>
+                <Text></Text>
+                </n0:Z_FI_WS_CONS_DEUD_ACR.Exception>
+                </detail>
+                </soap-env:Fault>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        `);
             }
 
             // Simular timeout si el ID es "timeout"
@@ -97,8 +125,8 @@ export const procesarSoap = (req, res) => {
             }
 
 
-            res.set('Content-Type', 'application/xml');
-            return res.status(200).send(soapResponse);
+            /*    res.set('Content-Type', 'application/xml');
+                return res.status(200).send(soapResponse);*/
         });
     });
 };
