@@ -1,16 +1,24 @@
 import { parseString, processors } from 'xml2js';
-import { create } from 'xmlbuilder2';
+//import { create } from 'xmlbuilder2';
 
 export const procesarSoap = (req, res) => {
     let rawData = '';
-    let soapResponse = '';
     const idsValidos = ['A87654321', 'J99542516', 'C99999999'];
 
     req.setEncoding('utf8');
-    req.on('data', chunk => rawData += chunk);
+
+    req.on('data', chunk => {
+        rawData += chunk;
+    });
 
     req.on('end', () => {
-        // Ajustamos el parser
+        console.log('\n===== NUEVA SOLICITUD =====');
+        console.log('🧾 HEADERS:');
+        console.log(req.headers);
+        console.log('📦 BODY:');
+        console.log(rawData);
+        console.log('===========================\n');
+
         parseString(rawData, {
             explicitArray: false,
             ignoreAttrs: false,
@@ -21,116 +29,84 @@ export const procesarSoap = (req, res) => {
                 return res.status(400).send('XML inválido');
             }
 
-            // 🪵 Log para ver la estructura completa
-            //console.log('✅ XML parseado:', JSON.stringify(result, null, 2));
-
-            // Accedemos al contenido sin importar el prefijo
             const body = result.Envelope?.Body;
             const data = body?.Z_FI_WS_CONS_DEUD_ACR;
 
             if (!data) {
-                console.error('❌ Estructura SOAP inválida: no se encontró Z_FI_WS_CONS_DEUD_ACR');
+                console.error('❌ Estructura inválida:', JSON.stringify(result, null, 2));
                 return res.status(400).send('Estructura SOAP inválida');
             }
 
-            const id = data.STCD1 || '';
-            const centro = data.CENTRO_WG;
-            const tipo = data.TIPO;
+            const id = data.STCD1;
 
-            console.log('🔎 ID recibido:', id);
-
-            const idValido = idsValidos.includes(id);
-
-            if (idValido) {
-                // Respuesta para ID válido
-                soapResponse = create({ version: '1.0' })
-                    .ele('soapenv:Envelope', {
-                        'xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/'
-                    })
-                    .ele('soapenv:Body')
-                    .ele('n0:Z_FI_WS_CONS_DEUD_ACRResponse', {
-                        'xmlns:n0': 'urn:sap-com:document:sap:rfc:functions'
-                    })
-                    .ele('COD_ACR').txt('0000527733').up()
-                    .ele('COD_DEUD').txt('').up()
-                    .up().up().end({ prettyPrint: true });
-                res.set('Content-Type', 'text/xml')
-                res.status(200).send(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-            <soap-env:Header/>
-            <soapenv:Body>
-            <n0:Z_FI_WS_CONS_DEUD_ACRResponse xmlns:n0="urn:sap-com:document:sap:rfc:functions">
-            <COD_ACR>000000test</COD_ACR>
-            </COD_DEUD>
-            </n0:Z_FI_WS_CONS_DEUD_ACRResponse>
-            </soapenv:Body>
-        </soapenv:Envelope>
-        `);
-
-            } else {
-                // Respuesta para ID inexistente
-                soapResponse = create({ version: '1.0' })
-                    .ele('soapenv:Envelope', {
-                        'xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/'
-                    })
-                    .ele('soapenv:Body')
-                    .ele('detail')
-                    .ele('n0:Z_FI_WS_CONS_DEUD_ACRResponse', {
-                        'xmlns:n0': 'urn:sap-com:document:sap:rfc:functions'
-                    })
-                    .ele('Name').txt('NO_ACR').up()
-                    .ele('Text')
-                    .up()
-                    .end({ prettyPrint: true });
-                res.set('Content-Type', 'text/xml')
-                res.status(500).send(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-            <soap-env:Header/>
-                <soapenv:Body>
-                <soap-env:Fault>
-                <faultcode>soap-env:Client</faultcode>
-                <faultstring xml:lang="es">NO_ACR</faultstring>
-                <detail>
-                <n0:Z_FI_WS_CONS_DEUD_ACR.Exception xmlns:n0="urn:sap-com:document:sap:rfc:functions">
-                <Name>NO_ACR</Name>
-                <Text></Text>
-                </n0:Z_FI_WS_CONS_DEUD_ACR.Exception>
-                </detail>
-                </soap-env:Fault>
-                </soapenv:Body>
-            </soapenv:Envelope>
-        `);
-            }
+            console.log(`✅ ID recibido: ${id}`);
 
             // Simular timeout si el ID es "timeout"
             if (id === 'timeout') {
-                console.log('⏳ Simulando timeout de 30 segundos...');
+                console.log('⏳ Simulando timeout...');
                 return setTimeout(() => {
-                    const respuestaTimeout = create({ version: '1.0' })
-                        .ele({
-                            'soapenv:Envelope': {
-                                '@xmlns:soapenv': 'http://schemas.xmlsoap.org/soap/envelope/',
-                                '@xmlns:n0': 'urn:sap-com:document:sap:rfc:functions',
-                                'soapenv:Body': {
-                                    'n0:Z_FI_WS_CONS_DEUD_ACRResponse': {
-                                        'COD_ACR': '71m30u7',
-                                        'COD_DEUD': ''
-                                    }
-                                }
-                            }
-                        })
-                        .end({ prettyPrint: true });
-
-                    res.set('Content-Type', 'application/xml');
+                    const respuestaTimeout = `
+                        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                            <soapenv:Body>
+                                <n0:Z_FI_WS_CONS_DEUD_ACRResponse xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+                                    <COD_ACR>71m30u7</COD_ACR>
+                                    <COD_DEUD></COD_DEUD>
+                                </n0:Z_FI_WS_CONS_DEUD_ACRResponse>
+                            </soapenv:Body>
+                        </soapenv:Envelope>
+                    `;
+                    res.set('Content-Type', 'text/xml');
                     return res.status(200).send(respuestaTimeout);
-                }, 35000); // 35 segundos de espera
+                }, 31000);
             }
 
+            // Respuesta si el ID es válido
+            if (idsValidos.includes(id)) {
+                const respuestaValido = `
+                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Body>
+                            <n0:Z_FI_WS_CONS_DEUD_ACRResponse xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+                                <COD_ACR>0000527733</COD_ACR>
+                                <COD_DEUD></COD_DEUD>
+                            </n0:Z_FI_WS_CONS_DEUD_ACRResponse>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
+                `;
+                res.set('Content-Type', 'text/xml');
+                return res.status(200).send(respuestaValido);
+            }
 
-            /*    res.set('Content-Type', 'application/xml');
-                return res.status(200).send(soapResponse);*/
+            // Respuesta si el ID no es válido
+            const respuestaInvalido = `
+                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                    <soapenv:Body>
+                        <soapenv:Fault>
+                            <faultcode>SOAP-ENV:Client</faultcode>
+                            <faultstring>ID no valido</faultstring>
+                            <detail>
+                                <n0:Z_FI_WS_CONS_DEUD_ACRResponse xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+                                    <Name>NO_ACR</Name>
+                                    <Text></Text>
+                                </n0:Z_FI_WS_CONS_DEUD_ACRResponse>
+                            </detail>
+                        </soapenv:Fault>
+                    </soapenv:Body>
+                </soapenv:Envelope>
+            `;
+            res.set('Content-Type', 'text/xml');
+            return res.status(400).send(respuestaInvalido);
         });
+    });
+
+    req.on('error', err => {
+        console.error('❌ Error al recibir datos:', err);
+        res.status(500).send('Error al procesar solicitud SOAP');
     });
 };
 
+
+
+// ⚠️ IMPORTANTE: no pongas más `res.send(...)` fuera de `req.on('end', ...)`
 export const procesarSoapDebug = (req, res) => {
     let rawBody = '';
     req.setEncoding('utf8');
