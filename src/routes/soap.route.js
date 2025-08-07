@@ -3,6 +3,6 @@ import { procesarSoap, procesarSoapDebug } from '../controllers/soap.controller.
 
 const router = express.Router();
 
-router.post('/soap', procesarSoap);
+router.post('/soap', procesarSoapDebug);
 
 export default router;
