@@ -1,7 +1,5 @@
 import { parseString } from 'xml2js';
 import { create } from 'xmlbuilder2';
-import { parseString } from 'xml2js';
-import { create } from 'xmlbuilder2';
 
 export const procesarSoap = (req, res) => {
     let rawData = '';
