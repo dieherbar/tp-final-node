@@ -21,6 +21,8 @@ app.use(express.static(join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(corsMiddleware);
 app.use(xmlParser);
+app.use(express.text({ type: '*/xml' }));// Middleware para parsear cuerpos XML agregado el 07/08/25
+
 
 //routes
 app.use("/",serviceRoutes);
