@@ -56,7 +56,8 @@ export const procesarSoap = async (req, res) => {
   </soap-env:Body>
 </soap-env:Envelope>`;
 
-                    res.type('application/xml');
+                    res.set('Content-Type', 'text/xml; charset=utf-8');
+                    //res.type('application/xml');
                     res.send(respuestaSoap);
                 }
             }
